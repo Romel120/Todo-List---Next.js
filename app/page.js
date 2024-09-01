@@ -5,6 +5,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mainTask, setMainTask] = useState([]);
+  const [editIndex , setEditIndex] = useState(null) ;
 
   const deleteHandler = (i) => {
     let copyTask = [...mainTask];
@@ -12,8 +13,27 @@ export default function Home() {
     setMainTask(copyTask);
   };
 
+  const editHandler = (i) => {
+    let editTask = mainTask[i] ;
+    setTitle(editTask.title) ;
+    setDescription(editTask.description) ;
+    setEditIndex(i) ;
+  }
+
+  const saveHandler = (i) => {
+    let saveTask = [...mainTask] ;
+    saveTask[i] = {title , description} ;
+    setMainTask(saveTask) ;
+    setTitle("") ;
+    setDescription("") ;
+    setEditIndex(null) ;
+  }
+
   const formHandler = (e) => {
     e.preventDefault();
+    if(editIndex !== null){
+      saveHandler() ;
+    }
     setMainTask([...mainTask, { title, description }]);
     setTitle("");
     setDescription("");
@@ -37,12 +57,20 @@ export default function Home() {
             {t.description}
           </p>
         </div>
-        <button
-          onClick={() => deleteHandler(i)}
-          className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-        >
-          Delete
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => editHandler(i)}
+            className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => deleteHandler(i)}
+            className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+          >
+            Delete
+          </button>
+        </div>
       </li>
     ));
   }
@@ -74,8 +102,8 @@ export default function Home() {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition"
-            >
-              Add Task
+              >
+              {editIndex !== null ? "Save changes" : "Add task"}
             </button>
           </div>
         </form>
