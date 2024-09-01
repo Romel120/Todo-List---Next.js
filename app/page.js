@@ -5,7 +5,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mainTask, setMainTask] = useState([]);
-  const [editIndex , setEditIndex] = useState(null) ;
+  const [editIndex, setEditIndex] = useState(null); // Tracks which task is being edited
 
   const deleteHandler = (i) => {
     let copyTask = [...mainTask];
@@ -18,25 +18,26 @@ export default function Home() {
     setTitle(editTask.title) ;
     setDescription(editTask.description) ;
     setEditIndex(i) ;
-  }
+  };
 
-  const saveHandler = (i) => {
+  const saveHandler = () => {
     let saveTask = [...mainTask] ;
-    saveTask[i] = {title , description} ;
+    saveTask[editIndex] = {title , description} ;
     setMainTask(saveTask) ;
     setTitle("") ;
     setDescription("") ;
     setEditIndex(null) ;
-  }
+  };
 
   const formHandler = (e) => {
     e.preventDefault();
-    if(editIndex !== null){
-      saveHandler() ;
+    if (editIndex !== null) {
+      saveHandler();
+    } else {
+      setMainTask([...mainTask, { title, description }]);
+      setTitle("");
+      setDescription("");
     }
-    setMainTask([...mainTask, { title, description }]);
-    setTitle("");
-    setDescription("");
   };
 
   let renderTask = (
@@ -102,8 +103,8 @@ export default function Home() {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition"
-              >
-              {editIndex !== null ? "Save changes" : "Add task"}
+            >
+              {editIndex !== null ? "Save Changes" : "Add Task"}
             </button>
           </div>
         </form>
